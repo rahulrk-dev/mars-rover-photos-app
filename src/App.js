@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react'
+import './App.css'
+import LazyImageLoad from './components/LazyLoadImage'
+import banner from './assets/img/rover-banner.jpg'
+import useDataFetcher from './hooks/dataFetcher'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const { isLoading, photos } = useDataFetcher(1)
+	const [scrollPosition, setScrollPosition] = useState(0)
+
+	const handleScroll = () => {
+		const position = window.pageYOffset
+		setScrollPosition(position)
+	}
+
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll, { passive: true })
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll)
+		}
+	}, [])
+
+	return (
+		<div className="app">
+			<div className="app__header">
+				<h1>MARS Rover Photo Gallery</h1>
+				<img src={banner} alt="banner" />
+				{!isLoading && photos.length > 0 && (
+					<h3>Data Date: {new Date(photos[0].earth_date).toDateString()}</h3>
+				)}
+			</div>
+			<div className="app__gallery">
+				{isLoading && <h1>Loading...</h1>}
+				{photos &&
+					photos.map((photo) => (
+						<LazyImageLoad
+							key={photo.id}
+							image={photo}
+							scrollPosition={scrollPosition}
+						/>
+					))}
+			</div>
+		</div>
+	)
 }
 
-export default App;
+export default App

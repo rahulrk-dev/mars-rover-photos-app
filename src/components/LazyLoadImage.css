@@ -1,0 +1,26 @@
+.lazyLoadImage {
+	position: relative;
+}
+
+.lazyLoadImage .lazyLoadImage__caption {
+	position: absolute;
+	bottom: 5%;
+	left: 0;
+	background: #fff;
+	padding: 5px;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.lazyLoadImage .lazy-load-image-loaded ~ .lazyLoadImage__caption {
+	opacity: 1;
+}
+
+.lazy-load-image-background {
+	margin: 5px 0;
+}
+
+.lazy-load-image-background img {
+	border-radius: 9px;
+	object-fit: cover;
+}
